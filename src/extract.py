@@ -1,10 +1,29 @@
-from pyspark.sql import DataFrame
-from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame, SparkSession
 
 
-def read_parquet(spark: SparkSession, path: str) -> DataFrame:
+def read_dataset(
+    spark: SparkSession,
+    path: str,
+    file_format: str = "parquet",
+    **options
+) -> DataFrame:
     """
-    Read a Parquet dataset.
-    """
+    Read a dataset in the specified format.
 
-    return spark.read.parquet(path)
+    Parameters
+    ----------
+    spark : SparkSession
+        Active Spark session.
+    path : str
+        Path to the dataset.
+    file_format : str
+        Dataset format (parquet, csv, json, etc.).
+    options : dict
+        Additional Spark read options.
+    """
+    return (
+        spark.read
+        .options(**options)
+        .format(file_format)
+        .load(path)
+    )

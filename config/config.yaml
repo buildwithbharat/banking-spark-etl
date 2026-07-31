@@ -1,0 +1,10 @@
+spark:
+  app_name: BankingSparkETL
+
+storage:
+  type: local
+
+paths:
+  customers:
+    path: data/input/customers.parquet
+    format: parquet
