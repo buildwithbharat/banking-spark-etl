@@ -13,4 +13,6 @@ def create_spark_session(app_name: str = "BankingSparkETL") -> SparkSession:
         .getOrCreate()
     )
 
+    spark.sparkContext.setLogLevel("ERROR")
+    
     return spark
