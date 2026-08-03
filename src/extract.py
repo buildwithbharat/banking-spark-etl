@@ -5,25 +5,33 @@ def read_dataset(
     spark: SparkSession,
     path: str,
     file_format: str = "parquet",
-    **options
+    **options,
 ) -> DataFrame:
     """
-    Read a dataset in the specified format.
-
-    Parameters
-    ----------
-    spark : SparkSession
-        Active Spark session.
-    path : str
-        Path to the dataset.
-    file_format : str
-        Dataset format (parquet, csv, json, etc.).
-    options : dict
-        Additional Spark read options.
+    Read a dataset.
     """
+
     return (
         spark.read
         .options(**options)
         .format(file_format)
         .load(path)
     )
+
+
+def read_datasets(spark: SparkSession, config: dict) -> dict:
+    """
+    Read all datasets defined in the configuration.
+    """
+
+    dataframes = {}
+
+    for dataset_name, dataset in config["datasets"].items():
+
+        dataframes[dataset_name] = read_dataset(
+            spark=spark,
+            path=dataset["path"],
+            file_format=dataset["format"],
+        )
+
+    return dataframes

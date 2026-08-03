@@ -1,28 +1,24 @@
 from src.config import load_config
-from src.extract import read_dataset
+from src.extract import read_datasets
 from src.session import create_spark_session
 
 
 def main():
+
     config = load_config()
 
     spark = create_spark_session(
         config["spark"]["app_name"]
     )
 
-    customers = read_dataset(
-    spark=spark,
-    path=config["paths"]["customers"]["path"],
-    file_format=config["paths"]["customers"]["format"],
-)
+    dataframes = read_datasets(spark, config)
 
-    print("Customer Schema")
-    customers.printSchema()
+    for name, dataframe in dataframes.items():
 
-    print(f"Customer Rows: {customers.count()}")
+        print(f"\n{name.upper()}")
+        print("-" * 40)
 
-    print("Sample Data")
-    customers.show(5, truncate=False)
+        print(f"Rows: {dataframe.count()}")
 
     spark.stop()
 

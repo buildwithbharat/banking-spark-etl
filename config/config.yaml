@@ -4,7 +4,31 @@ spark:
 storage:
   type: local
 
-paths:
+datasets:
+  branches:
+    path: data/input/branches.parquet
+    format: parquet
+
+  employees:
+    path: data/input/employees.parquet
+    format: parquet
+
   customers:
     path: data/input/customers.parquet
+    format: parquet
+
+  accounts:
+    path: data/input/accounts.parquet
+    format: parquet
+
+  cards:
+    path: data/input/cards.parquet
+    format: parquet
+
+  loans:
+    path: data/input/loans.parquet
+    format: parquet
+
+  transactions:
+    path: data/input/transactions.parquet
     format: parquet
