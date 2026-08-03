@@ -14,14 +14,10 @@ def main():
     dataframes = read_datasets(spark, config)
 
     for name, dataframe in dataframes.items():
-
-        print(f"\n{name.upper()}")
-        print("-" * 40)
-
-        print(f"Rows: {dataframe.count()}")
+        print(name)
+        dataframe.show(3, truncate=False)
 
     spark.stop()
-
 
 if __name__ == "__main__":
     main()
