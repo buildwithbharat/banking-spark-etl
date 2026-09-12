@@ -40,3 +40,21 @@ def rank_customer_transactions(customer_transactions: DataFrame) -> DataFrame:
     window = Window.partitionBy('customer_id').orderBy(F.col('amount').desc())
 
     return customer_transactions.withColumn('transaction_rank', F.dense_rank().over(window))
+
+def customer_transaction_summary_sql(customers: DataFrame, accounts: DataFrame, transactions: DataFrame) -> DataFrame:
+
+    customers.createOrReplaceTempView('customers')
+    accounts.createOrReplaceTempView('accounts')
+    transactions.createOrReplaceTempView('transactions')
+
+    return customers.sparkSession.sql("""SELECT
+            c.customer_id,
+            COUNT(t.transaction_id) AS total_transactions,
+            SUM(CASE WHEN t.transaction_status = 'Success' THEN 1 ELSE 0 END) AS successful_transactions,
+            SUM(t.amount) AS total_transaction_amount,
+            ROUND(AVG(t.amount), 3) AS average_transaction_amount,
+            SUM(CASE WHEN t.transaction_type = 'Credit' THEN t.amount ELSE 0 END) AS total_credit_amount,
+            SUM(CASE WHEN t.transaction_type = 'Debit' THEN t.amount ELSE 0 END) AS total_debit_amount
+        FROM customers c INNER JOIN accounts a ON c.customer_id = a.customer_id
+        INNER JOIN transactions t ON a.account_id = t.account_id
+        GROUP BY c.customer_id""")

@@ -9,7 +9,8 @@ from src.transform import (
     transform_transactions,
     transform_loans,
     create_customer_transaction_summary,
-    rank_customer_transactions,)
+    rank_customer_transactions,
+    customer_transaction_summary_sql,)
 
 def main():
 
@@ -38,17 +39,22 @@ def main():
     ranked_customer_transactions = rank_customer_transactions(customer_transactions_df)
 
     print(f'Ranked customer transactions: {ranked_customer_transactions.count()}')
-    ranked_customer_transactions.show(25, truncate=False)
+    ranked_customer_transactions.show(10, truncate=False)
 
-    write_dataset(
-    customer_transaction_summary,
-    config['outputs']['customer_transaction_summary']['path'],
-    config['outputs']['customer_transaction_summary']['format'])
+    cust_tran_summary_sql = customer_transaction_summary_sql(customers,accounts,transactions)
 
-    write_dataset(
-    ranked_customer_transactions,
-    config['outputs']['ranked_customer_transactions']['path'],
-    config['outputs']['ranked_customer_transactions']['format'])
+    print(f'Customer transaction summary SQL: {cust_tran_summary_sql.count()}')
+    cust_tran_summary_sql.show(10, truncate=False)
+
+    #write_dataset(
+    #customer_transaction_summary,
+    #config['outputs']['customer_transaction_summary']['path'],
+    #config['outputs']['customer_transaction_summary']['format'])
+
+    #write_dataset(
+    #ranked_customer_transactions,
+    #config['outputs']['ranked_customer_transactions']['path'],
+    #config['outputs']['ranked_customer_transactions']['format'])
 
     spark.stop()
 
