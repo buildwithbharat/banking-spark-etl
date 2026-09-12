@@ -20,6 +20,7 @@ def read_dataset(
 
 
 def read_datasets(spark: SparkSession, config: dict) -> dict:
+
     """
     Read all datasets defined in the configuration.
     """

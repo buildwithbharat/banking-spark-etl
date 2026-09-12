@@ -1,6 +1,7 @@
 from src.config import load_config
 from src.extract import read_datasets
 from src.session import create_spark_session
+from src.load import write_dataset
 from src.transform import (
     customer_transactions,
     transform_customers,
@@ -38,6 +39,16 @@ def main():
 
     print(f'Ranked customer transactions: {ranked_customer_transactions.count()}')
     ranked_customer_transactions.show(25, truncate=False)
+
+    write_dataset(
+    customer_transaction_summary,
+    config['outputs']['customer_transaction_summary']['path'],
+    config['outputs']['customer_transaction_summary']['format'])
+
+    write_dataset(
+    ranked_customer_transactions,
+    config['outputs']['ranked_customer_transactions']['path'],
+    config['outputs']['ranked_customer_transactions']['format'])
 
     spark.stop()
 

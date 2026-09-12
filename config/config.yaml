@@ -1,9 +1,6 @@
 spark:
   app_name: BankingSparkETL
 
-storage:
-  type: local
-
 datasets:
   branches:
     path: data/input/branches.parquet
@@ -31,4 +28,13 @@ datasets:
 
   transactions:
     path: data/input/transactions.parquet
+    format: parquet
+
+outputs:
+  customer_transaction_summary:
+    path: data/output/customer_transaction_summary
+    format: parquet
+
+  ranked_customer_transactions:
+    path: data/output/ranked_customer_transactions
     format: parquet
