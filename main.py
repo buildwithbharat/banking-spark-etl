@@ -1,3 +1,7 @@
+from pyspark.sql import DataFrame
+from pyspark.sql.window import Window
+from pyspark.sql import functions as F
+
 from src.config import load_config
 from src.extract import read_datasets
 from src.session import create_spark_session
@@ -26,8 +30,13 @@ def main():
 
     print(f'Customers: {customers.count()}')
     print(f'Accounts: {accounts.count()}')
-    print(f'Transactions: {transactions.count()}')
     print(f'Loans: {loans.count()}')
+
+    print(f'Transactions: {transactions.count()}')
+    print(f'Transaction Partitions: {transactions.rdd.getNumPartitions()}')
+
+    repartitioned_transactions = transactions.repartition(20)
+    print(f'Repartitioned transactions: {repartitioned_transactions.rdd.getNumPartitions()}')
 
     customer_transaction_summary = create_customer_transaction_summary(customers, accounts, transactions)
 
